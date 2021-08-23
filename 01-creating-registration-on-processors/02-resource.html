@@ -68,7 +68,7 @@
     e.preventDefault();
     try {
       const data = new FormData(form);
-      fetch('/create-user.php', {
+      fetch('/assets/php/create-user.php', {
         method: 'POST',
         body: data
       })
