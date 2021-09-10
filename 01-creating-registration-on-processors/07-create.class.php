@@ -35,10 +35,7 @@ class extUserCreateProcessor extends modUserCreateProcessor {
       $sitename = $this->modx->getOption('site_name');
       $email = $this->object->get('email');
       $hash = $this->profile->get('extended')['activation_key'];
-      $link = $this->modx->makeUrl('3', '', array(
-        'email' => rawurlencode($email),
-        'hash' => $hash,
-      ), 'full');
+      $link = MODX_SITE_URL . 'assets/php/confirm-email.php?email=' . rawurlencode($email) . '&hash=' . $hash;
       $placeholders = array(
         'username' => $username,
         'fullname' => $fullname,
