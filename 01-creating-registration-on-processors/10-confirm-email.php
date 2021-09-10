@@ -37,6 +37,9 @@ if (empty($email) || empty($hash)) {
   $profile->save();
   $user->save();
 
+  $modx->user = $user;
+  $modx->user->addSessionContext('web');
+
   // редирект на id = 1
   $id = $modx->getOption('site_start');
   $redirect = $modx->makeUrl($id);
