@@ -1,5 +1,12 @@
 <?php
 
+require_once '../../config.core.php';
+
+require_once MODX_CORE_PATH . 'model/modx/modx.class.php';
+$modx = new modX();
+$modx->initialize('web');
+$modx->getService('error', 'error.modError', '', '');
+
 $email = $_GET['email'];
 $hash = $_GET['hash'];
 
@@ -24,7 +31,6 @@ if (empty($email) || empty($hash)) {
   }
   $extended = $profile->get('extended');
   unset($extended['activation_key']);
-  // $extended['lastactivity'] = date('Y-m-d H:i:s');
   $profile->set('extended', $extended);
   $user->set('active', 1);
 
