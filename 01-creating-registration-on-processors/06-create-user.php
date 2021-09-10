@@ -26,7 +26,7 @@ $params = [
   'confirmpassword' => $_POST['confirmpassword'],
   'passwordnotifymethod' => 'e', // g - генерировать, else e
   'fullname' => $_POST['fullname'],
-  'captcha' => $_POST['captcha'],
+  'captcha' => crypt($_POST['captcha'], '$1$itchief$7'),
   'correctcaptcha' => $captcha,
   'extended' => ['registered' => date('Y-m-d H:i:s', time()), 'activation_key' => md5(uniqid(rand(), true))],
   'active' => false,

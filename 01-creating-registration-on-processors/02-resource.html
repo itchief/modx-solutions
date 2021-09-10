@@ -35,7 +35,7 @@
           <input type="text" class="form-control" name="fullname" id="fullname" aria-describedby="validation-fullname" required value="">
           <div id="validation-fullname" class="invalid-feedback"></div>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 captcha">
           <div class="mb-2 d-flex align-items-center">
             <img src="/assets/php/captcha.php" id="captcha-image" width="132" alt="captcha">
             <div id="captcha-refresh" class="btn btn-link ml-2">Обновить</div>
@@ -60,11 +60,14 @@
 
 
 <script>
-  const captchaRefresh = document.querySelector('#captcha-refresh');
-  captchaRefresh.addEventListener('click', (e) => {
-    const captchaImage = document.querySelector('#captcha-image');
+  const refreshCaptcha = (target) => {
+    const captchaImage = target.closest('.captcha').querySelector('#captcha-image');
     captchaImage.src = '/assets/php/captcha.php?r=' + new Date().getUTCMilliseconds();
-  });
+  }
+
+  const captchaBtn = document.querySelector('#captcha-refresh');
+  captchaBtn.addEventListener('click', (e) => refreshCaptcha(e.target));
+
   const form = document.querySelector('form');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -78,12 +81,12 @@
           return response.json();
         })
         .then((data) => {
-          console.log(data);
           document.querySelectorAll('.form-control.is-invalid').forEach((item) => {
             item.classList.remove('is-invalid');
             item.nextElementSibling.textContent = '';
           });
           if (!data.success) {
+            refreshCaptcha(form.querySelector('#captcha-refresh'));
             data.errors.forEach(item => {
               if (document.querySelector(`#${item.id}`)) {
                 document.querySelector(`#${item.id}`).classList.add('is-invalid');
