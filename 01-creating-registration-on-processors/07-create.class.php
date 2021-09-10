@@ -12,7 +12,7 @@ class extUserCreateProcessor extends modUserCreateProcessor {
       $this->addFieldError('captcha', 'Пожалуйста укажите код на изображении!');
     } else {
       if ($captcha !== $correctCaptcha) {
-        //$this->addFieldError('captcha', 'Этот код капчи не соответствует изображению!');
+        $this->addFieldError('captcha', 'Этот код капчи не соответствует изображению!');
       }
     }
     $fullname = $this->getProperty('fullname');
