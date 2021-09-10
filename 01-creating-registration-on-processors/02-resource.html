@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-md-6 mx-auto">
       <h1 class="h3 my-4 text-center">[[*pagetitle]]</h1>
-      <form action="#" method="post">
+      <form id="form" action="/assets/php/create-user.php" method="post">
         <div class="mb-3">
           <label for="email" class="form-label">Email*</label>
           <input type="email" class="form-control" name="email" id="email" aria-describedby="validation-email" required value="alex.malcev1980@yandex.ru">
@@ -37,7 +37,7 @@
         </div>
         <div class="mb-3">
           <div class="mb-2 d-flex align-items-center">
-            <img src="/assets/captcha/captcha.php?id=0.5646544292584987" id="captcha-image" width="132" alt="captcha">
+            <img src="/assets/php/captcha.php" id="captcha-image" width="132" alt="captcha">
             <div id="captcha-refresh" class="btn btn-link ml-2">Обновить</div>
           </div>
           <label for="captcha" class="form-label">Код, изображенный на картинке*</label>
@@ -57,20 +57,22 @@
   </div>
 </div>
 
+
+
 <script>
   const captchaRefresh = document.querySelector('#captcha-refresh');
   captchaRefresh.addEventListener('click', (e) => {
     const captchaImage = document.querySelector('#captcha-image');
-    captchaImage.src = '/assets/captcha/captcha.php?id=' + Math.random();
+    captchaImage.src = '/assets/php/captcha.php?r=' + new Date().getUTCMilliseconds();
   });
   const form = document.querySelector('form');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     try {
-      const data = new FormData(form);
-      fetch('/assets/php/create-user.php', {
-        method: 'POST',
-        body: data
+      fetch(form.action, {
+        method: form.method,
+        credentials: 'same-origin',
+        body: new FormData(form)
       })
         .then((response) => {
           return response.json();
