@@ -1,0 +1,85 @@
+[[!UpdateProfile?
+  &validate=`fullname:required`
+  &reloadOnSuccess=`1`
+  &preHooks=`hookProfileUpdatePhoto`
+]]
+
+<div class="container pt-3">
+  <div class="card text-dark bg-white mx-auto mb-3" style="max-width: 30rem;">
+    <div class="card-header">Редактирование данных</div>
+    <div class="card-body">
+      [[+photo:notempty=`<form class="form" action="[[~[[*id]]]]" method="post">
+        <div class="mb-3 text-end">
+          <input type="hidden" name="remove-photo">
+          <input type="hidden" name="fullname" value="[[+fullname]]">
+          <input type="submit" class="btn btn-danger" value="Удалить фото" name="login-updprof-btn" id="login-updprof-btn">
+        </div>
+      </form>`]]
+      <div class="mb-3">
+        <img src="[[+photo:default=`/assets/img-users/default.svg`]]" class="rounded-circle mx-auto mb-2 d-block" id="photouser" alt="[[+email]]" width="100" height="100" style="object-fit: cover;">
+        <div class="fw-bold text-center">[[+email]]</div>
+      </div>
+
+      [[+login.update_success:is=`1`:then=`<div class="alert alert-success" role="alert">[[%login.profile_updated? &namespace=`login` &topic=`updateprofile`]]</div>`:else=`[[+error.message:notempty=`<div class="updprof-error alert alert-danger" role="alert">[[+error.message]]</div>`]]`]]
+      <form class="form" action="[[~[[*id]]]]" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="nospam" value="">
+        <div class="mb-3">
+          <label for="fullname" class="form-label">[[!%login.fullname? &namespace=`login` &topic=`updateprofile`]]</label>
+          <input type="text" name="fullname" class="form-control[[+error.fullname:notempty=` is-invalid`]]" id="fullname" value="[[+fullname]]">
+          <div class="invalid-feedback">[[+error.fullname]]</div>
+        </div>
+        <div class="mb-3">
+          <label for="photo" class="form-label">Фото</label>
+          <input type="file" id="photo" name="photo" class="form-control">
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">[[!%login.phone]]</label>
+          <input type="text" name="phone" class="form-control[[+error.phone:notempty=` is-invalid`]]" id="phone" value="[[+phone]]">
+          <div class="invalid-feedback">[[+error.phone]]</div>
+        </div>
+        <div class="mb-3">
+          <label for="country" class="form-label">[[!%login.country]]</label>
+          <input type="text" name="country" class="form-control[[+error.country:notempty=` is-invalid`]]" id="country" value="[[+country]]">
+          <div class="invalid-feedback">[[+error.country]]</div>
+        </div>
+        <div class="mb-3">
+          <label for="website" class="form-label">[[!%login.website]]</label>
+          <input type="text" name="website" class="form-control[[+error.website:notempty=` is-invalid`]]" id="website" value="[[+website]]">
+          <div class="invalid-feedback">[[+error.website]]</div>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Обновить профиль" name="login-updprof-btn" id="login-updprof-btn">
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// при изменении значения элемента #photo
+document.querySelector('#photo').onchange = (e) => {
+  // удалим у элемента класс is-invalid
+  e.target.classList.remove('is-invalid');
+  // если браузер не поддерживает FileReader, то прекращаем дальнейшие действия
+  if (!window.FileReader) {
+    console.log('Браузер не поддерживает File API');
+    return;
+  }
+  // получаем выбранный файл
+  const file = e.target.files[0];
+  // выводим сообщение, если файл не является png или jpeg
+  if (!((file.type == 'image/png') || (file.type == 'image/jpeg'))) {
+    e.target.classList.add('is-invalid');
+    e.target.nextSibling.textContent = 'Загруженный файл не является png или jpeg.';
+    return;
+  }
+  // создаём экземпляр объекта FileReader, посредством которого будем читать файл
+  const reader = new FileReader();
+  // после успешного завершения чтения файла
+  reader.onload = (e) => {
+    // указываем в качестве значения атрибута src прочитанный файл
+    document.querySelector('#photouser').src = e.target.result;
+  }
+  // запускаем процесс чтения файла
+  reader.readAsDataURL(file);
+}
+</script>
